@@ -1,9 +1,17 @@
 import React from 'react'
+import { useSnapshot } from 'valtio'
 
-const Tab = () => {
+import state from '../store'
+
+const Tab = ({tab, isFilterTab, isActiveTab, handleClick}) => {
+  const snap =useSnapshot(state)
   return (
-    <div>
-      tab
+    <div
+    key={tab.name}
+    className={`tab-btn ${isFilterTab ? 'rounded-full glassmorphism': 'rounded-4'}`}
+    onClick={handleClick}
+    >
+      
     </div>
   )
 }
