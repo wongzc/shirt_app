@@ -40,12 +40,40 @@ const Customizer = () => {
         readFile={readFile}
         />
       case "aipicker":
-        return <AIPicker/>
+        return <AIPicker
+          prompt={prompt}
+          setPrompt={setPrompt}
+          generatingImg={generatingImg}
+          handleSubmit={handleSubmit}
+        />
       default:
         return null
     }
   }
+  const handleSubmit= async (type, result)=>{
+    if(!prompt)return alert ("enter a prompt pls")
+    try{
+        setGeneratingImg(true)
+        const response =await fetch('localhost:8080/api/v1/dalle',{
+          method: 'POST',
+          headers:{
+            'Content-type':'application/json'
+          },
+          body: JSON.stringify({
+            prompt,
+          })
+        })
 
+        const data =await response.json()
+        handleDecals(type, `data: image/png; base64, ${data.photo}`)
+      }catch(error) {
+        alert(error)
+      }finally{
+        setGeneratingImg(false)
+        setActiveEditorTab("")
+      }
+    
+  }
   const handleDecals=(type,result) =>{
     const decalType =DecalTypes[type]
 
@@ -67,6 +95,14 @@ const Customizer = () => {
         state.isFullTexture =false
         
     }
+
+    //after setting state, activefilter tab update
+    setActiveFilterTab((prevState)=>{
+      return{
+      ...prevState,
+      [tabName]: !prevState[tabName]
+      }
+    })
   }
   const readFile=(type)=> {
     reader(file)
@@ -118,9 +154,9 @@ const Customizer = () => {
               <Tab 
               key={tab.name} 
               tab={tab} 
-              isFilterTab=""
-              isActiveTab=""
-              handleClick={() => {}} 
+              isFilterTab
+              isActiveTab={activeFilterTab[tab.name]}
+              handleClick={() => handleActiveFilterTab(tab.name)} 
               />
             ))}
           </motion.div>
