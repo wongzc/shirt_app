@@ -54,7 +54,7 @@ const Customizer = () => {
     if(!prompt)return alert ("enter a prompt pls")
     try{
         setGeneratingImg(true)
-        const response =await fetch('localhost:8080/api/v1/dalle',{
+        const response =await fetch('http//localhost:8080/api/v1/dalle',{
           method: 'POST',
           headers:{
             'Content-type':'application/json'
@@ -90,9 +90,11 @@ const Customizer = () => {
         break;
       case "stylishShirt":
         state.isFullTexture =!activeFilterTab[tabName]
+        break
       default:
         state.isLogoTexture = true
         state.isFullTexture =false
+        break
         
     }
 
